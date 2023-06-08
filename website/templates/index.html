@@ -23,51 +23,28 @@
 				<li><a href="#"><i class="fa fa-arrow-circle-down"></i>Menu</a>
 					<div class="sub-menu-1">
 						<ul>
-							<li><a href="#">Register</a></li>
-							<li><a href="#">Sign In</a></li>
-							<li><a href="#"onclick="document.getElementById('id01').style.display='block'">Staff Login</a>
+							<li><a href="#" onclick="openRegisterModal()">Register</a></li>
 								<!-- Button to open the modal login form -->
-									
-
-									<!-- The Modal -->
-									<div id="id01" class="modal">
-									<span onclick="document.getElementById('id01').style.display='none'"
-									class="close" title="Close Modal">&times;</span>
-
-									<!-- Modal Content -->
-									<form class="modal-content animate" action="/action_page.php">
-										<div class="imgcontainer">
-										<img src="static/images/gallery/thumbs/Avatar.JPG" alt="Avatar" class="avatar">
-										</div>
-
-										<div class="container">
-										<label for="uname"><b>Username</b></label>
-										<input type="text" placeholder="Enter Username" name="uname" required>
-
-										<label for="psw"><b>Password</b></label>
-										<input type="password" placeholder="Enter Password" name="psw" required>
-
-										<button type="submit">Login</button>
-										<label>
-											<input type="checkbox" checked="checked" name="remember"> Remember me
-										</label>
-										</div>
-
-										<div class="container" style="background-color:#f1f1f1">
-										<button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-										<span class="psw">Forgot <a href="#">password?</a></span>
-										</div>
-									</form>
-									</div>
-							</li>
-							
+								<script>
+									// Function to open the modal form
+									function openRegisterModal() {
+										document.getElementById('id01').style.display = 'block';
+									}
+								</script>	
+							<li><a href="#" onclick="openLoginModal()">Staff Login</a></li>
+								<!-- Button to open the modal register form -->
+								<script>
+									// Function to open the modal form
+									function openLoginModal() {
+										document.getElementById('id02').style.display = 'block';
+									}
+								</script>
+								
 						</ul>
 					</div>
 				</li>
 		</ul>
 	</div>
-
-	
 
 		<!-- Wrapper -->
 			<div id="wrapper">
