@@ -1,8 +1,10 @@
-from . import db
-from . import create_app
 from flask import jsonify
+from flask_login import UserMixin
+from . import create_app
+from sqlalchemy.sql import func
+from . import db
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(100))
@@ -14,14 +16,15 @@ class Client(db.Model):
     phone = db.Column(db.String(20))
     address = db.Column(db.String(200))
     clinical_data = db.relationship('ClinicalData', backref='client', lazy=True)
+
 class ClinicalData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
     test_name = db.Column(db.String(100))
     result = db.Column(db.String(100))
-    date = db.Column(db.Date)
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
 
-    def to_dict(self):
+def to_dict(self):
         return {
             'id': self.id,
             'client_id': self.client_id,

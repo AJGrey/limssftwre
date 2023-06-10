@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Clinical Data</title>
+</head>
+<body>
+    <h1>Create Clinical Data</h1>
+    <h2>Client: {{ client.name }}</h2>
+    
+    <form method="POST" action="{{ url_for('views.create_clinical_data', client_id=client.id) }}">
+        <label for="test_name">Test Name:</label>
+        <input type="text" name="test_name" id="test_name" required><br>
+
+        <label for="sample_type">Sample Type:</label>
+        <input type="text" name="sample_type" id="sample_type" required><br>
+        
+        <label for="result">Result:</label>
+        <input type="text" name="result" id="result" required><br>
+        
+        <button type="submit">Create</button>
+    </form>
+</body>
+</html>

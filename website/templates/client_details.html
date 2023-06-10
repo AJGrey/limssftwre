@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Client Details</title>
+</head>
+<body>
+    <h1>Client Details</h1>
+    <h2>{{ client.name }}</h2>
+    <p>Email: {{ client.email }}</p>
+    <p>Phone: {{ client.phone }}</p>
+    <p>Address: {{ client.address }}</p>
+    
+    <h2>Clinical Data</h2>
+    <ul>
+        {% for clinical_data in client.clinical_data %}
+            <li>{{ clinical_data.test_name }} - {{ clinical_data.result }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
