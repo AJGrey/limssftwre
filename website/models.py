@@ -1,30 +1,41 @@
 from flask import jsonify
+from flask_login import login_manager
 from flask_login import UserMixin
-from . import create_app
+from website import create_app
 from sqlalchemy.sql import func
 from . import db
 
 class User(db.Model, UserMixin):
+    __tablename__ = 'user'
+
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True)
+    firstname = db.Column(db.String(50))
+    lastname = db.Column(db.String(50))
+    email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(100))
 
+    def __repr__(self):
+        return f"User('{self.email}')"
+
 class Client(db.Model):
+    """Create class client"""
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
+    firstname = db.Column(db.String(100))
+    lastname = db.Column(db.String(100))
     email = db.Column(db.String(150), unique=True)
     phone = db.Column(db.String(20))
     address = db.Column(db.String(200))
     clinical_data = db.relationship('ClinicalData', backref='client', lazy=True)
 
 class ClinicalData(db.Model):
+    """Create class ClientData"""
     id = db.Column(db.Integer, primary_key=True)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
     test_name = db.Column(db.String(100))
     result = db.Column(db.String(100))
     date = db.Column(db.DateTime(timezone=True), default=func.now())
 
-def to_dict(self):
+    def to_dict(self):
         return {
             'id': self.id,
             'client_id': self.client_id,

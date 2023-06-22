@@ -1,5 +1,6 @@
 from os import path
 from flask import Flask, session, g, request, render_template, redirect, url_for, flash
+from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from .auth import auth
@@ -27,10 +28,11 @@ def create_app():
 
     # Custom user authentication logic
     from .models import User
-    
+
     def create_database(app):
         if not path.exists('website/' + DB_NAME):
-            db.create_all(app=app)
+            with app.app_context():
+                db.create_all()
 
 
     @app.route('/login', methods=['GET', 'POST'])
@@ -39,7 +41,7 @@ def create_app():
             email = request.form.get('email')
             password = request.form.get('password')
 
-            user = User.query.filter_by(email=email.lower()).first()
+            user = User.query.filter_by(email=email).first()
             if user and bcrypt.check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
                 session['user_id'] = user.id
@@ -52,7 +54,33 @@ def create_app():
     @app.route('/logout')
     def logout():
         session.pop('user_id', None)
+        db.session.delete(g.user)
+        db.session.commit()
         return redirect(url_for('views.home'))
+    
+    @app.route('/submit_enquiry', methods=['POST'])
+    def submit_enquiry():
+        name = request.form['name']
+        email = request.form['email']
+        message = request.form['message']
+
+        # Connect to the SQLite database
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+
+        # Create a table if it doesn't exist
+        c.execute('''CREATE TABLE IF NOT EXISTS enquiries
+                 (name TEXT, email TEXT, message TEXT)''')
+
+        # Insert the enquiry data into the table
+        c.execute("INSERT INTO enquiries VALUES (?, ?, ?)", (name, email, message))
+
+        # Commit the changes and close the database connection
+        conn.commit()
+        conn.close()
+
+        flash('Message Submitted', 'success')
+        return jsonify({'redirect': '/'})
 
     @app.before_request
     def load_logged_in_user():
@@ -62,9 +90,7 @@ def create_app():
         else:
             g.user = None
 
+    create_database(app)
+
     return app
-
-
-def create_database(app):
-    if not path.exists('website/' + DB_NAME):
-        db.create_all(app=app)
+   
